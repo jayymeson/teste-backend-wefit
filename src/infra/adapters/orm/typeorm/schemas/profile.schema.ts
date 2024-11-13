@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 import { ProfileType } from "../../../../../shared/enums/profile-type.enum";
+import { Address } from "./adress.schema";
 
 @Entity()
 export class Profile {
@@ -50,4 +51,7 @@ export class Profile {
 
   @Column()
   state: string;
+
+  @Column(() => Address)
+  address: Address;
 }
