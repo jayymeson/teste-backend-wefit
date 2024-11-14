@@ -1,8 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 import { ProfileType } from "../../../../../shared/enums/profile-type.enum";
 import { Address } from "./adress.schema";
 
+
 @Entity()
+@Index(["cpf", "type"], { unique: true, where: "type = 'PF'" })
+@Index(["cpf", "cnpj"], { unique: true, where: "type = 'PJ'" })
 export class Profile {
   @PrimaryGeneratedColumn("uuid")
   id: string;
@@ -30,27 +33,6 @@ export class Profile {
 
   @Column()
   email: string;
-
-  @Column()
-  zipCode: string;
-
-  @Column()
-  street: string;
-
-  @Column()
-  number: string;
-
-  @Column({ nullable: true })
-  addition: string;
-
-  @Column()
-  city: string;
-
-  @Column()
-  neighborhood: string;
-
-  @Column()
-  state: string;
 
   @Column(() => Address)
   address: Address;

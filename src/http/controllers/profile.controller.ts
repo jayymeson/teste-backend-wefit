@@ -6,27 +6,24 @@ import {
 import { ProfileType } from "../../shared/enums/profile-type.enum";
 import { CreateProfileUseCase } from "../../aplication/user-case/create-profile.usecase";
 import { CreateProfileDto } from "../dto/create-profile.dto";
+import { validate } from "class-validator";
 
 export class ProfileController {
   constructor(private readonly createProfileUseCase: CreateProfileUseCase) {}
 
   async create(req: Request, res: Response) {
-    const createProfileDto: CreateProfileDto = req.body;
+    const createProfileDto = Object.assign(new CreateProfileDto(), req.body);
 
-    if (createProfileDto.type === ProfileType.PF) {
-      if (!createProfileDto.cpf || !validateCPF(createProfileDto.cpf)) {
-        return res.status(400).json({ error: "Invalid CPF for PF type" });
-      }
-      createProfileDto.cnpj = undefined;
-    } else if (createProfileDto.type === ProfileType.PJ) {
-      if (!createProfileDto.cnpj || !validateCNPJ(createProfileDto.cnpj)) {
-        return res.status(400).json({ error: "Invalid CNPJ for PJ type" });
-      }
-    } else {
-      return res.status(400).json({ error: "Invalid profile type" });
+    const errors = await validate(createProfileDto);
+    if (errors.length > 0) {
+      return res.status(400).json({ errors });
     }
 
-    const profile = await this.createProfileUseCase.execute(createProfileDto);
-    return res.status(201).json(profile);
+    try {
+      const profile = await this.createProfileUseCase.execute(createProfileDto);
+      return res.status(201).json(profile);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 }

@@ -7,15 +7,27 @@ export class CreateProfileUseCase {
   constructor(private readonly profileRepository: ProfileRepository) {}
 
   async execute(data: CreateProfileDto) {
-    if (!data.cpf || data.cpf.trim() === "") {
-      throw new Error("CPF is required and cannot be empty.");
-    }
-
-    if (
-      data.type === ProfileType.PJ &&
-      (!data.cnpj || data.cnpj.trim() === "")
-    ) {
-      throw new Error("CNPJ is required for PJ type.");
+    if (data.type === ProfileType.PF) {
+      const existingProfile = await this.profileRepository.findByCpfAndType(
+        data.cpf,
+        ProfileType.PF
+      );
+      if (existingProfile) {
+        throw new Error("Já existe um perfil PF com este CPF.");
+      }
+    } else if (data.type === ProfileType.PJ) {
+      if (!data.cnpj || data.cnpj.trim() === "") {
+        throw new Error("CNPJ é obrigatório para perfis PJ.");
+      }
+      const existingProfile = await this.profileRepository.findByCpfAndCnpj(
+        data.cpf,
+        data.cnpj
+      );
+      if (existingProfile) {
+        throw new Error("Já existe um perfil PJ com este CPF e CNPJ.");
+      }
+    } else {
+      throw new Error("Tipo de perfil inválido.");
     }
 
     const profile = new Profile(

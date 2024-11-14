@@ -4,8 +4,8 @@ import { ProfileType } from "../../shared/enums/profile-type.enum";
 export class Profile implements CreateProfileInterface {
   constructor(
     public type: ProfileType,
-    public cnpj: string = "", 
-    public cpf: string = "",  
+    public cnpj: string = "",
+    public cpf: string = "",
     public name: string,
     public cell: string,
     public phone: string,

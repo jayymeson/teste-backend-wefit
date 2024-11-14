@@ -1,5 +1,3 @@
-// src/application/use-cases/authenticate-user.usecase.ts
-
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { LoginDto } from "../../http/dto/login.dto";
