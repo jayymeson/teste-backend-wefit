@@ -1,6 +1,6 @@
 import swaggerJsDoc from "swagger-jsdoc";
-import { ProfileType } from "../shared/enums/profile-type.enum";
 import { SwaggerOptions } from "swagger-ui-express";
+import { ProfileType } from "../shared/enums/profile-type.enum";
 
 const options: SwaggerOptions = {
   definition: {
@@ -8,9 +8,17 @@ const options: SwaggerOptions = {
     info: {
       title: "Profile API",
       version: "1.0.0",
-      description: "API for managing user profiles (Individuals and Legal Entities).",
+      description:
+        "API para gerenciar perfis de usuários (Indivíduos e Entidades Legais).",
     },
     components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
       schemas: {
         Address: {
           type: "object",
@@ -23,12 +31,23 @@ const options: SwaggerOptions = {
             neighborhood: { type: "string", example: "Centro" },
             state: { type: "string", example: "SP" },
           },
-          required: ["zipCode", "street", "number", "city", "neighborhood", "state"],
+          required: [
+            "zipCode",
+            "street",
+            "number",
+            "city",
+            "neighborhood",
+            "state",
+          ],
         },
         CreateProfileDto: {
           type: "object",
           properties: {
-            type: { type: "string", enum: [ProfileType.PF, ProfileType.PJ], example: "PF" },
+            type: {
+              type: "string",
+              enum: [ProfileType.PF, ProfileType.PJ],
+              example: "PF",
+            },
             cnpj: { type: "string", example: "12345678000199" },
             cpf: { type: "string", example: "12345678909" },
             name: { type: "string", example: "João da Silva" },
@@ -39,13 +58,59 @@ const options: SwaggerOptions = {
           },
           required: ["type", "cpf", "name", "cell", "email", "address"],
         },
+        LoginDto: {
+          type: "object",
+          properties: {
+            email: { type: "string", example: "wefit@wefit.com" },
+            password: { type: "string", example: "senha_root_123" },
+          },
+          required: ["email", "password"],
+        },
+        AuthResponse: {
+          type: "object",
+          properties: {
+            token: { type: "string", example: "jwt.token.aqui" },
+          },
+        },
       },
     },
     paths: {
+      "/login": {
+        post: {
+          summary: "Login do Usuário",
+          description: "Autentica o usuário e retorna um token JWT.",
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/LoginDto",
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Autenticação bem-sucedida",
+              content: {
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/AuthResponse",
+                  },
+                },
+              },
+            },
+            400: {
+              description: "Credenciais inválidas",
+            },
+          },
+        },
+      },
       "/profile": {
         post: {
-          summary: "Creates a new profile.",
-          description: "Creates a new profile based on the data provided.",
+          summary: "Cria um novo perfil.",
+          description: "Cria um novo perfil com base nos dados fornecidos.",
+          security: [{ BearerAuth: [] }],
           requestBody: {
             required: true,
             content: {
@@ -58,7 +123,7 @@ const options: SwaggerOptions = {
           },
           responses: {
             201: {
-              description: "Profile created successfully",
+              description: "Perfil criado com sucesso",
               content: {
                 "application/json": {
                   schema: {
@@ -68,7 +133,7 @@ const options: SwaggerOptions = {
               },
             },
             400: {
-              description: "Validation error",
+              description: "Erro de validação",
             },
           },
         },

@@ -1,7 +1,7 @@
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger";
-import profileRoutes from "./http/routes/profile-routes";
+import profileRoutes from "./http/routes/index.routes";
 
 
 const app = express();
