@@ -3,6 +3,7 @@ import { ProfileType } from "../../shared/enums/profile-type.enum";
 
 export class Profile implements CreateProfileInterface {
   constructor(
+    public id: string,
     public type: ProfileType,
     public cnpj: string = "",
     public cpf: string = "",

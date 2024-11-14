@@ -9,9 +9,11 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": "./src", // Adicione esta linha
+    "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
     }
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

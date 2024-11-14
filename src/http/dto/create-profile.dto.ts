@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -69,4 +70,8 @@ export class CreateProfileDto {
   @ValidateNested()
   @Type(() => AddressDto)
   address: AddressDto;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  termsAccepted: boolean;
 }

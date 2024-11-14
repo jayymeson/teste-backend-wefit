@@ -2,7 +2,6 @@ import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 import { ProfileType } from "../../../../../shared/enums/profile-type.enum";
 import { Address } from "./adress.schema";
 
-
 @Entity()
 @Index(["cpf", "type"], { unique: true, where: "type = 'PF'" })
 @Index(["cpf", "cnpj"], { unique: true, where: "type = 'PJ'" })
@@ -36,4 +35,7 @@ export class Profile {
 
   @Column(() => Address)
   address: Address;
+
+  @Column({ default: false })
+  termsAccepted: boolean;
 }

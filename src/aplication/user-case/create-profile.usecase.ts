@@ -6,7 +6,11 @@ import { ProfileType } from "../../shared/enums/profile-type.enum";
 export class CreateProfileUseCase {
   constructor(private readonly profileRepository: ProfileRepository) {}
 
-  async execute(data: CreateProfileDto) {
+  async execute(data: CreateProfileDto): Promise<Profile> {
+    if (!data.termsAccepted) {
+      throw new Error("Você deve aceitar os termos para continuar.");
+    }
+
     if (data.type === ProfileType.PF) {
       const existingProfile = await this.profileRepository.findByCpfAndType(
         data.cpf,
@@ -30,17 +34,7 @@ export class CreateProfileUseCase {
       throw new Error("Tipo de perfil inválido.");
     }
 
-    const profile = new Profile(
-      data.type,
-      data.cnpj ?? "",
-      data.cpf,
-      data.name,
-      data.cell,
-      data.phone,
-      data.email,
-      data.address
-    );
-
-    return await this.profileRepository.create(profile);
+    const profile = await this.profileRepository.create(data);
+    return profile;
   }
 }
