@@ -1,5 +1,7 @@
 gerar
-npm run migration:generate -- src/infra/adapters/orm/typeorm/migrations/CreateProfileTable
+npm run migration:generate 
 
 excutar
-npm run typeorm migration:run -d src/infra/adapters/orm/typeorm/config.ts
+npm run migration:run
+
+npm i --legacy-peer-deps

@@ -6,7 +6,9 @@
   "scripts": {
     "start": "ts-node-dev --files -r tsconfig-paths/register --inspect --ignore-watch node_modules src/server.ts",
     "typeorm": "typeorm-ts-node-commonjs",
-     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/infra/adapters/orm/typeorm/config.ts"
+     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/infra/adapters/orm/typeorm/config.ts",
+     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/infra/adapters/orm/typeorm/config.ts"
+
   },
   "dependencies": {
     "dotenv": "^16.4.5",
